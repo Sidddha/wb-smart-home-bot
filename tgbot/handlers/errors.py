@@ -4,10 +4,9 @@ from aiogram.utils.exceptions import (TelegramAPIError,
                                       CantParseEntities)
 
 
-from aiogram import Dispatcher as dp
+from aiogram import Dispatcher
 
 
-@dp.errors_handler()
 async def errors_handler(update, exception):
     """
     Exceptions handler. Catches all exceptions within task factory tasks.
@@ -35,3 +34,6 @@ async def errors_handler(update, exception):
     
     # At least you have tried.
     logging.exception(f'Update: {update} \n{exception}')
+
+def register_errors(dp: Dispatcher):
+    dp.register_errors_handler(errors_handler)

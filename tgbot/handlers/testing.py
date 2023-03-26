@@ -6,7 +6,8 @@ from tgbot.misc.states import Test
 
 async def enter_test(message: types.Message):
     await message.answer("начало тестирования. \n"
-                         "Вопрос №1")
+                         "Вопрос №1\n"
+                         "Как делишки?")
 
     await Test.q1.set()
 
@@ -18,7 +19,8 @@ async def answer_q1(message: types.Message, state: FSMContext):
         data["answer1"] = answer
 
     await message.answer(f"ваш ответ: {data['answer1']}.\n"
-                         "вопрос №2...")
+                         "вопрос №2\n"
+                         "Как погодка?")
     await Test.q2.set()
 
 
