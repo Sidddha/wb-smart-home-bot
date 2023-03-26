@@ -1,7 +1,9 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
 
+from tgbot.misc.throttling import rate_limit
 
+@rate_limit(limit=10)
 async def admin_start(message: Message):
     await message.reply("Hello, admin!")
 
