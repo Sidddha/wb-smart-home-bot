@@ -16,21 +16,24 @@ from tgbot.misc.set_bot_commands import set_default_commands
 from tgbot.misc.notify_admins import on_startup_notify
 from tgbot.middlewares.environment import EnvironmentMiddleware
 from tgbot import middlewares
+from tgbot.utils.db_api.sqlite import Database
 
 
 logger = logging.getLogger(__name__)
 
+db = Database()
 
 def register_all_middlewares(dp, config):
     dp.setup_middleware(EnvironmentMiddleware(config=config))
-    middlewares.setup(dp)    
+    middlewares.setup(dp)
+
 
 def register_all_filters(dp):
     dp.filters_factory.bind(AdminFilter)
 
 
-def register_all_handlers(dp):
-    handlers.register(dp)
+# def register_all_handlers(dp):
+#     handlers.register_handlers(dp)
 #     register_test(dp)
 #     register_admin(dp)
 #     register_user(dp)
@@ -40,6 +43,7 @@ def register_all_handlers(dp):
 
 async def set_commands(dp):
     await set_default_commands(dp)
+
 
 async def main():
     logging.basicConfig(
@@ -57,9 +61,14 @@ async def main():
 
     register_all_middlewares(dp, config)
     register_all_filters(dp)
-    register_all_handlers(dp)
+    handlers.register_handlers(dp)
     await set_commands(dp)
     await on_startup_notify(dp)
+    try:
+        db.create_table_users()
+    except Exception as e:
+        logger.exception(e)
+    print(db.select_all_users())
 
     # start
     try:
