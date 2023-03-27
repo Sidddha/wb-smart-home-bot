@@ -1,0 +1,1 @@
+from .new_user import registration_keyboard

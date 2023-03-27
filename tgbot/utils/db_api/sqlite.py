@@ -4,6 +4,7 @@ import sqlite3
 
 
 class Database:
+    
     def __init__(self, path_to_db="tgbot/data/main.db"):
         self.path_to_db = path_to_db
 
@@ -41,13 +42,17 @@ class Database:
 
         self.execute(sql, commit=True)
 
-    def add_user(self, id: int, Name: str, Status: int):
-        sql = "INSERT INTO Users(id, Name, Status) VALUES(?, ?, ?)"
-        parameters = (id, Name, Status)
+    def add_user(self, id: int, name: str, status: str):
+        sql = "INSERT INTO Users(id, name, status) VALUES(?, ?, ?)"
+        parameters = (id, name, status)
         self.execute(sql, parameters=parameters, commit=True)
 
     def select_all_users(self):
         sql = "SELECT * FROM Users"
+        return self.execute(sql, fetchall=True)
+    
+    def select_all_ids(self):
+        sql = "SELECT id FROM Users"
         return self.execute(sql, fetchall=True)
 
     @staticmethod
@@ -69,6 +74,8 @@ class Database:
         sql = "UPDATE Users SET Status=? WHERE id=?"
         return self.execute(sql, parameters=(status, id), commit=True)
 
+    def delete_users(self):
+        self.execute("DELETE FROM Users WHERE True")
 
 def logger(statement):
     print(f"""
