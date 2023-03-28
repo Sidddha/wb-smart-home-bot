@@ -55,10 +55,14 @@ def add_admin(id):
     env.read_env()
     admin_ids=list(map(int, env.list("ADMINS")))
     admin_ids.append(id)
+    print(f"==================={admin_ids}")
+    env = dict()
+    env["ADMINS"] = admin_ids
+    print(env.dump())
 
 def remove_admin(id):
     env = Env()
     env.read_env()
     admin_ids=list(map(int, env.list("ADMINS")))
     admin_ids.remove(id)    
-
+    env.dump(ADMINS=admin_ids)
