@@ -4,7 +4,9 @@ import sqlite3
 
 
 class Database:
-    
+    """
+    Методы для взаимодействия с базой данных
+    """
     def __init__(self, path_to_db="tgbot/data/main.db"):
         self.path_to_db = path_to_db
 
@@ -66,7 +68,12 @@ class Database:
         sql = "SELECT * FROM Users WHERE "
         sql, parameters = self.format_args(sql, kwargs)
         return self.execute(sql, parameters, fetchone=True)
-
+ 
+    def select_status(self, **kwargs):
+        sql = "SELECT status FROM Users WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters, fetchone=True)
+    
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 

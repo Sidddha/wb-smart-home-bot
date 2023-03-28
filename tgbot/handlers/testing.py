@@ -1,7 +1,8 @@
-from aiogram import Dispatcher, types
+from aiogram import types
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import Test
+from bot import dp
 
 
 async def enter_test(message: types.Message):
@@ -36,7 +37,7 @@ async def answer_q2(message: types.Message, state: FSMContext):
     await state.reset_state(with_data=False)
 
 
-def register_test(dp: Dispatcher):
+def register_test(dp):
     dp.register_message_handler(enter_test, Command("test"))
     dp.register_message_handler(answer_q1, state=Test.q1)
     dp.register_message_handler(answer_q2, state=Test.q2)

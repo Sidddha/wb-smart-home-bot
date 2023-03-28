@@ -14,5 +14,5 @@ def register_handlers(dp: Dispatcher):
     register_user(dp)
     register_unknown(dp)
     register_test(dp)
-    # register_echo(dp)
+    register_echo(dp)
     register_errors(dp)

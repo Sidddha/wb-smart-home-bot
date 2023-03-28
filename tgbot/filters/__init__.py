@@ -1,5 +1,5 @@
-from .admin import AdminFilter
-from .user import UserFilter
+from .is_admin import AdminFilter
+from .is_user import UserFilter
 from aiogram import Dispatcher
 
 
