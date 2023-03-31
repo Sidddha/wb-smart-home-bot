@@ -1,1 +1,1 @@
-from .new_user import registration_keyboard
+from .registration_keyboard import Button

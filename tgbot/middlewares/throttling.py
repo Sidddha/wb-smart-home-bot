@@ -10,7 +10,7 @@ from aiogram.utils.exceptions import Throttled
 class ThrottledMiddleware(BaseMiddleware):
     """Simple middleware"""
 
-    def __init__(self, limit=5, key_prefix='antiflood_'):
+    def __init__(self, limit=0.5, key_prefix='antiflood_'):
         self.rate_limit = limit
         self.prefix = key_prefix
         super(ThrottledMiddleware, self).__init__()
