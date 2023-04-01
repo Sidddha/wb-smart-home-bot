@@ -8,3 +8,4 @@ class Test(StatesGroup):
 class NewUser(StatesGroup):
     password = State()
     request = State()
+    attempts_limit = State()

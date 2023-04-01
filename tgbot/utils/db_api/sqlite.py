@@ -36,18 +36,15 @@ class Database:
         sql = """
         CREATE TABLE Users (
         id int NOT NULL,
-        Name varchar(255) NOT NULL,
-        Status varchar(255),
+        name varchar(255) NOT NULL,
+        status varchar(255),
         PRIMARY KEY (id)
         )
         """
 
         self.execute(sql, commit=True)
 
-    def add_user(self, id: int, name: str, status: str):
-        sql = "INSERT INTO Users(id, name, status) VALUES(?, ?, ?)"
-        parameters = (id, name, status)
-        self.execute(sql, parameters=parameters, commit=True)
+
 
     def select_all_users(self):
         sql = "SELECT * FROM Users"
@@ -56,7 +53,23 @@ class Database:
     def select_all_ids(self):
         sql = "SELECT id FROM Users"
         return self.execute(sql, fetchall=True)
+   
+    def is_user_exist(self, id: int):
+        ids = self.select_all_ids()
+        if id in ids:
+            return True
+        else:
+            return False
 
+    def add_user(self, id: int, name: str, status: str):
+        if self.is_user_exist(id):
+            print(f"User with ID: {id} already exist.")
+            pass
+        else:
+            sql = "INSERT INTO Users(id, name, status) VALUES(?, ?, ?)"
+            parameters = (id, name, status)
+            self.execute(sql, parameters=parameters, commit=True)
+            
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -78,7 +91,7 @@ class Database:
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
 
     def update_status(self, status, id):
-        sql = "UPDATE Users SET Status=? WHERE id=?"
+        sql = "UPDATE Users SET status=? WHERE id=?"
         return self.execute(sql, parameters=(status, id), commit=True)
 
     def delete_users(self):

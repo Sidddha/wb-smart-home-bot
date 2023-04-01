@@ -5,7 +5,8 @@ from tgbot.misc.throttling import rate_limit
 
 @rate_limit(limit=1)
 async def admin_start(message: Message):
-    await message.reply("Hello, admin!")
+    await message.reply(f"Привет, {message.from_user.first_name}\n"
+                        "Здесь будет расширенное меню администратора")
 
 
 def register_admin(dp: Dispatcher):

@@ -5,8 +5,8 @@ from tgbot.misc.throttling import rate_limit
 
 @rate_limit(limit=1)
 async def start(message: types.Message, user: User):
-    await message.answer(f"Hello, {user.name}\n"
-                        f"nice to meet you: {user.__dict__}")
+    await message.answer(f"Привет, {user.name}\n"
+                        f"Здесь будет стандартное меню пользователя")
 
 
 def register_user(dp: Dispatcher):

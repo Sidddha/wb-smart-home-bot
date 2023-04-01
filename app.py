@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
-from tgbot.config import load_config
+from tgbot.config import load_config, remove_admin
 from tgbot import filters
 from tgbot import handlers
 from tgbot.misc.set_bot_commands import set_default_commands
@@ -48,10 +48,13 @@ async def main():
     await set_commands(dp)
     await on_startup_notify(dp)
     # db.delete_users()
+    # remove_admin(504168024)
     try:
         db.create_table_users()
     except Exception as e:
         logger.exception(e)
+    # db.add_user(504168024, "Siddha", "USER")
+    # db.update_status("ADMIN", 504168024)
     print(db.select_all_users())
 
     # start
