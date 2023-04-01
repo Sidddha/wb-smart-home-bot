@@ -30,6 +30,10 @@ class Button():
             "text": "Отмена", 
             "callback_data": registration_callback.new(reg="cancel")
         }
+        self.debug= {
+            "text": "DEBUG_MODE: reset attempts",
+            "callback_data": registration_callback.new(reg="debug")
+        }
 
 
 # def registration_keyboard(*buttons):

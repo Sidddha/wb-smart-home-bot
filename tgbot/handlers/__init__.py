@@ -4,7 +4,7 @@ from .admin.start_admin import register_admin
 from .echo import register_echo
 from .errors import register_errors
 from .admin.register_new_user import register_new_user
-
+from .help import register_help
 from aiogram import Dispatcher
 
 
@@ -13,5 +13,6 @@ def register_handlers(dp: Dispatcher):
     register_user(dp)
     register_unknown(dp)
     register_new_user(dp)
+    register_help(dp)
     register_echo(dp)
     register_errors(dp)

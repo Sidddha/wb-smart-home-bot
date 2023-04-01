@@ -1,9 +1,7 @@
-from aiogram import types
+from aiogram import types, Dispatcher
 
-
-async def set_default_commands(dp):
+async def set_default_commands(dp: Dispatcher):
     await dp.bot.set_my_commands([
         types.BotCommand("start", "Запустить бота"),
-        types.BotCommand("help", "Нужна помощь?"),
-        types.BotCommand("test", "тест с машиной состояний")
+        types.BotCommand("help", "Нужна помощь?")
     ]) 

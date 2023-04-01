@@ -95,9 +95,13 @@ async def attempts_limit(message: types.Message, state: FSMContext):
             output = re.findall(r':[0-9]{2}:', remain)
             result = output[0][1:-1]
             print(result)
-            await message.answer(f"Попробуйте еще через {result} минут.")
+            await message.answer(f"Попробуйте еще через {result} минут.", reply_markup=keyboard_constructor(btn.debug))
     except:
         pass
+
+async def debug(cq: types.CallbackQuery, state:FSMContext):
+    await state.reset_state(with_data=True)
+    await cq.answer("Data reset")
 
 async def cancel(cq: types.CallbackQuery, state: FSMContext):
     await cq.message.edit_text(f"Введи пароль доступа или отправь запрос администратору")
@@ -108,10 +112,10 @@ async def cancel(cq: types.CallbackQuery, state: FSMContext):
 
 def register_unknown(dp: Dispatcher):
     dp.register_message_handler(start_unknown, commands=["start"], state="*")
+    dp.register_callback_query_handler(debug, registration_callback.filter(reg="debug"), state="*")
     dp.register_message_handler(attempts_limit, state=NewUser.attempts_limit)
     dp.register_callback_query_handler(cancel, registration_callback.filter(reg="cancel"), state="*")
     dp.register_callback_query_handler(enter_password, registration_callback.filter(reg="enter_password"))
     dp.register_message_handler(get_password, state=NewUser.password)
     dp.register_callback_query_handler(send_request, registration_callback.filter(reg="send_request"))
     dp.register_message_handler(request_sent, state=NewUser.request)
-
