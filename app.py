@@ -5,19 +5,19 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
-from tgbot.config import load_config, remove_admin
+from tgbot.config import load_config
 from tgbot import filters
 from tgbot import handlers
 from tgbot.misc.set_bot_commands import set_default_commands
 from tgbot.misc.notify_admins import on_startup_notify
 from tgbot.middlewares.environment import EnvironmentMiddleware
 from tgbot import middlewares
-from tgbot.utils.db_api.sqlite import Database
+from tgbot.utils.db_api.postgresql import Database
 
 
 logger = logging.getLogger(__name__)
-
-db = Database()
+loop = asyncio.get_event_loop()
+db = Database(loop)
 config = load_config(".env")
 storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
 bot = Bot(token=config.tg_bot.token, parse_mode='HTML')

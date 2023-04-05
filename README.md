@@ -1,3 +1,11 @@
+## Dependencys
+
+This bot powered by `aiogram`. Install it with following command:
+`pip install aiogram`
+
+To interact with database install `SQLAlchemy`
+`pip install SQLAlchemy`
+
 **Structure:**
 
 ```

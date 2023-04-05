@@ -7,7 +7,7 @@ from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import NewUser
 from tgbot.config import load_config, add_admin
-from tgbot.utils.db_api.sqlite import Database
+from tgbot.utils.db_api.postgresql import Database
 from app import bot
 import datetime
 

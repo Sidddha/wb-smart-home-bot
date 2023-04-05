@@ -1,7 +1,7 @@
 import typing
 
 from aiogram.dispatcher.filters import BoundFilter
-from tgbot.utils.db_api.sqlite import Database 
+from tgbot.utils.db_api.postgresql import Database 
 from tgbot.config import Config
 
 

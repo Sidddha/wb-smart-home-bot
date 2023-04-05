@@ -3,10 +3,11 @@ from dataclasses import dataclass
 from environs import Env
 from os import environ
 import dotenv
-from tgbot.utils.db_api.sqlite import Database 
+# from tgbot.utils.db_api.postgresql import Database 
+from app import db 
 
 
-db = Database()
+# db = Database()
 
 @dataclass
 class DbConfig:
@@ -49,8 +50,8 @@ def load_config(path: str = None):
         ),
         db=DbConfig(
             host=env.str('DB_HOST'),
-            password=env.str('DB_PASS'),
-            user=env.str('DB_USER'),
+            password=env.str('PG_PASSWORD'),
+            user=env.str('PG_USER'),
             database=env.str('DB_NAME')
         ),
         misc=Miscellaneous()

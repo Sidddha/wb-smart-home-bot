@@ -1,7 +1,7 @@
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram import types
 from tgbot.utils.db_api.user import User
-from tgbot.utils.db_api.sqlite import Database
+from tgbot.utils.db_api.postgresql import Database
 
 db = Database()
 
