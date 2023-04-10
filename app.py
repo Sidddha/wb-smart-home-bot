@@ -1,27 +1,15 @@
 import asyncio
 import logging
 
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.contrib.fsm_storage.redis import RedisStorage2
 
-from tgbot.config import load_config
 from tgbot import filters
 from tgbot import handlers
 from tgbot.misc.set_bot_commands import set_default_commands
 from tgbot.misc.notify_admins import on_startup_notify
 from tgbot.middlewares.environment import EnvironmentMiddleware
 from tgbot import middlewares
-from tgbot.utils.db_api.postgresql import Database
-
-
-logger = logging.getLogger(__name__)
-loop = asyncio.get_event_loop()
-db = Database(loop)
-config = load_config(".env")
-storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
-bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
-dp = Dispatcher(bot, storage=storage)
+from loader import bot, logger, dp, db, config
+from tgbot.utils.db_api import db_gino, quick_commands as db_command
 
 
 def register_all_middlewares(dp, config):
@@ -47,23 +35,14 @@ async def main():
     handlers.register_handlers(dp)
     await set_commands(dp)
     await on_startup_notify(dp)
-    # db.delete_users()
-    # remove_admin(504168024)
-    try:
-        db.create_table_users()
-    except Exception as e:
-        logger.exception(e)
+    await db.set_bind(config.db.url)
+    await db_gino.on_startup(dp)
+    await db.gino.create_all()
     # db.add_user(504168024, "Siddha", "USER")
     # db.update_status("ADMIN", 504168024)
-    print(db.select_all_users())
+    print(await db_command.select_all_users())
 
     # start
-    try:
-        await dp.start_polling()
-    finally:
-        await dp.storage.close()
-        await dp.storage.wait_closed()
-        await bot.session.close()
 
 
 if __name__ == '__main__':

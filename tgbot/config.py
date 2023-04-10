@@ -1,13 +1,10 @@
 from dataclasses import dataclass
 
+import asyncio
 from environs import Env
 from os import environ
 import dotenv
-# from tgbot.utils.db_api.postgresql import Database 
-from app import db 
 
-
-# db = Database()
 
 @dataclass
 class DbConfig:
@@ -15,6 +12,7 @@ class DbConfig:
     password: str
     user: str
     database: str
+    url: str
 
 
 @dataclass
@@ -50,53 +48,54 @@ def load_config(path: str = None):
         ),
         db=DbConfig(
             host=env.str('DB_HOST'),
-            password=env.str('PG_PASSWORD'),
-            user=env.str('PG_USER'),
-            database=env.str('DB_NAME')
+            password=env.str('DB_PASSWORD'),
+            user=env.str('DB_USER'),
+            database=env.str('DB_NAME'),
+            url=env.str('POSTGRES_URL')
         ),
         misc=Miscellaneous()
     )
 
 
-def add_admin(id: str):
-    env = Env()
-    env.read_env()
+# def add_admin(id: str):
+#     env = Env()
+#     env.read_env()
 
-    # Get a list of admin IDs from the ADMINS variable in the environment
-    admin_ids_string = env.str("ADMINS", default="")
-    admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
+#     # Get a list of admin IDs from the ADMINS variable in the environment
+#     admin_ids_string = env.str("ADMINS", default="")
+#     admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
 
-    # Add the new admin ID to the list
-    admin_ids.append(id)
+#     # Add the new admin ID to the list
+#     admin_ids.append(id)
 
-    # Set the ADMINS variable to the updated list of admin IDs
-    admin_ids_string = ",".join(str(i) for i in admin_ids)
-    environ["ADMINS"] = admin_ids_string
-    env("ADMINS", admin_ids_string)
-    # Write the changes back to the .env file
-    dotenv_file = dotenv.find_dotenv()
-    dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
-    db.update_status(status="ADMIN", id=id)
+#     # Set the ADMINS variable to the updated list of admin IDs
+#     admin_ids_string = ",".join(str(i) for i in admin_ids)
+#     environ["ADMINS"] = admin_ids_string
+#     env("ADMINS", admin_ids_string)
+#     # Write the changes back to the .env file
+#     dotenv_file = dotenv.find_dotenv()
+#     dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
+#     db.update_status(status="ADMIN", id=id)
 
-def remove_admin(id):
-    env = Env()
-    env.read_env()
+# def remove_admin(id):
+#     env = Env()
+#     env.read_env()
 
-    # Get a list of admin IDs from the ADMINS variable in the environment
-    admin_ids_string = env.str("ADMINS", default="")
-    admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
+#     # Get a list of admin IDs from the ADMINS variable in the environment
+#     admin_ids_string = env.str("ADMINS", default="")
+#     admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
 
-    # Add the new admin ID to the list
-    admin_ids.remove(id)
+#     # Add the new admin ID to the list
+#     admin_ids.remove(id)
 
-    # Set the ADMINS variable to the updated list of admin IDs
-    admin_ids_string = ",".join(str(i) for i in admin_ids)
-    environ["ADMINS"] = admin_ids_string
-    env("ADMINS", admin_ids_string)
-    # Write the changes back to the .env file
-    dotenv_file = dotenv.find_dotenv()
-    dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
-    db.update_status(status="ADMIN", id=id)
+#     # Set the ADMINS variable to the updated list of admin IDs
+#     admin_ids_string = ",".join(str(i) for i in admin_ids)
+#     environ["ADMINS"] = admin_ids_string
+#     env("ADMINS", admin_ids_string)
+#     # Write the changes back to the .env file
+#     dotenv_file = dotenv.find_dotenv()
+#     dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
+#     db.update_status(status="ADMIN", id=id)
 
 
 

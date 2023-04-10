@@ -6,13 +6,11 @@ from tgbot.keyboards.registration_keyboard import registration_callback, Button
 from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import NewUser
-from tgbot.config import load_config, add_admin
-from tgbot.utils.db_api.postgresql import Database
-from app import bot
+from loader import bot, config
+from tgbot.utils.db_api import quick_commands as db
 import datetime
 
-db = Database()
-config = load_config()
+
 btn = Button()
 
 
@@ -35,7 +33,7 @@ async def enter_password(cq: types.CallbackQuery, callback_data: dict, state: FS
 async def get_password(message: types.Message, state: FSMContext):
     password = int(message.text)
     if password == config.tg_bot.admin_password:
-        add_admin(message.from_user.id)
+        await db.update_status(message.from_user.id, "ADMIN")
         await state.finish()
         await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
                              "Для начала работы отправьте /start")

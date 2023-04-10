@@ -1,9 +1,8 @@
 from aiogram.dispatcher.filters import BoundFilter
-from tgbot.utils.db_api.postgresql import Database
-import typing
-# from app import logger
 
-db = Database()
+import typing
+
+from tgbot.utils.db_api import quick_commands as db
 
 class UserFilter(BoundFilter):
     key = 'is_user'
@@ -12,10 +11,10 @@ class UserFilter(BoundFilter):
         self.is_user = is_user
 
     async def check(self, obj):
-        status = db.select_status(id=obj.from_user.id)
-        if status is None:
+        user = await db.select_user(id=obj.from_user.id)
+        if user.status is None:
             return False
         else:
-            print(f"========== status = {status[0]}")
-            if status[0] == "USER":
+            print(f"========== status = {user.status}")
+            if user.status == "USER":
                 return self.is_user
