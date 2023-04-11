@@ -1,6 +1,5 @@
 from .calback_datas import registration_callback
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-# from button_constructor import Button
+
 
 class Button():
     def __init__(self):
@@ -36,13 +35,7 @@ class Button():
         }
 
 
-# def registration_keyboard(*buttons):
-#     keyboard = InlineKeyboardMarkup()
-#     for button in buttons:
-#         text = button["text"]
-#         callback_data = button["callback_data"]
-#         keyboard.add(InlineKeyboardButton(text, callback_data=callback_data))
-#     return keyboard
+
 
 
 

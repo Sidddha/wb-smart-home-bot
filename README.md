@@ -1,11 +1,17 @@
-## Dependencys
+## Установка:
+Перейдите в `/opt` и скачайте репозиторий:
 
-This bot powered by `aiogram`. Install it with following command:
-`pip install aiogram`
+```
+# cd /opt
+# wget https://github.com/Sidddha/wb-smart-home-bot.git
+```
 
-To interact with database install `SQLAlchemy`
-`pip install SQLAlchemy`
+В файле `.env.template` насторйте параметры бота (имя, токен и тд) и базы данных. 
 
+Затем запустите скрипт, который настроит systemd сервис бота и контейнер с базой данных:
+```
+# bash setup.sh
+```
 **Structure:**
 
 ```

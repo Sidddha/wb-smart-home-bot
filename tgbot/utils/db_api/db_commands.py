@@ -11,11 +11,10 @@ async def add_user(id: int, name: str, status: str = "UNKNOWN_USER"):
         print(f"User {name} already exist!")
 
 async def select_all_users():
-    try:
-        users = await User.query.gino.all()
-        return users
-    except UndefinedColumnError:
-        pass
+    # try:
+    users = await User.query.gino.all()
+    return users
+    # except UndefinedColumnError:
 async def select_user(id: int):
     user = await User.query.where(User.id == id).gino.first()
     return user
@@ -23,3 +22,7 @@ async def select_user(id: int):
 async def update_status(id: int, status: str = "USER"):
     user = await User.get(id)
     await user.update(status=status).apply()
+
+async def get_admins():
+    admins = await User.query.where(User.status == "ADMIN").gino.all()
+    return admins

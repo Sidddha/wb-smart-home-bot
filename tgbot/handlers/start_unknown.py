@@ -1,21 +1,21 @@
 import re
 from aiogram import Dispatcher, types
 from tgbot.utils.db_api.user import User
-from tgbot.misc.throttling import rate_limit
 from tgbot.keyboards.registration_keyboard import registration_callback, Button
 from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import NewUser
 from loader import bot, config
-from tgbot.utils.db_api import quick_commands as db
+from tgbot.utils.db_api import db_commands 
 import datetime
 
 
 btn = Button()
+ATTEMPTS = 3 # Количество попыток ввода пароля
+TIMEOUT = 30 # Таймаут после израсходования попыток
 
-
-@rate_limit(limit=1)
 async def start_unknown(message: types.Message, user: User, state: FSMContext):
+    """ Вызывается если пользователь неизвестен. """
     await message.answer(f"Здравствуй, {user.name}. Я тебя не знаю. Введи пароль доступа или отправь запрос администратору",
                          reply_markup=keyboard_constructor(btn.enter_password, btn.send_request, btn.cancel))
     await state.reset_state(with_data=False)
@@ -25,17 +25,19 @@ async def start_unknown(message: types.Message, user: User, state: FSMContext):
 
 
 async def enter_password(cq: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    """ Предлагает ввести пароль администратора. Пароль задается в .env """
     await cq.answer()
-    await cq.message.answer("Введите пароль", reply_markup=keyboard_constructor(btn.cancel))
+    await cq.message.edit_text("Введите пароль", reply_markup=keyboard_constructor(btn.cancel))
     await NewUser.password.set()
 
 
 async def get_password(message: types.Message, state: FSMContext):
+    """ Проверка пароля и назначение пользователя админом если пароль верный."""
     password = int(message.text)
     if password == config.tg_bot.admin_password:
-        await db.update_status(message.from_user.id, "ADMIN")
+        await db_commands.update_status(message.from_user.id, "ADMIN")
         await state.finish()
-        await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
+        await message.edit_text("Пароль принят! Вы зарегистрированы как администратор.\n"
                              "Для начала работы отправьте /start")
     else:
         data = await state.get_data()
@@ -43,9 +45,9 @@ async def get_password(message: types.Message, state: FSMContext):
         attempt = attempt + 1
         data["attempts"] = attempt
         await state.update_data(data=data, kwargs="attempts")
-        if attempt > 2:
+        if attempt > ATTEMPTS - 1:
             now = datetime.datetime.now()
-            delta = now + datetime.timedelta(minutes=30)
+            delta = now + datetime.timedelta(minutes=TIMEOUT)
             data["time"] = delta
             await state.update_data(data=data, kwargs=("time"))
             await message.answer("Все, хватит. Думаю ты не знаешь пароль",
@@ -53,24 +55,29 @@ async def get_password(message: types.Message, state: FSMContext):
             await NewUser.attempts_limit.set()
             print(await state.get_state())
             print(data)
-        elif attempt == 2:
+        elif attempt == ATTEMPTS - 1:
             await message.answer("Осталась последняя попытка", reply_markup=keyboard_constructor(btn.cancel))
             await NewUser.password.set()
         else:
-            await message.answer(f"Неверный пароль. Осталось попыток: {3-attempt}", reply_markup=keyboard_constructor(btn.cancel))
+            await message.answer(f"Неверный пароль. Осталось попыток: {ATTEMPTS-attempt}", reply_markup=keyboard_constructor(btn.cancel))
             await NewUser.password.set()
 
 
 async def send_request(cq: types.CallbackQuery, user: User):
-    if not config.tg_bot.admin_ids:        
+    """ 
+    Пользователь может отпраить запрос на использование бота администратору.
+    Запрос будет отправлен всем администраторам.
+    """
+    admins = await db_commands.get_admins()
+    if not admins:        
         await cq.answer()
-        await cq.message.answer("Упс, похоже здесь еще нет ни одного администратора... Попробуйте ввести пароль.", 
+        await cq.message.edit_text("Упс, похоже здесь еще нет ни одного администратора... Попробуйте ввести пароль.", 
                                 reply_markup=keyboard_constructor(btn.enter_password, btn.cancel))
     else:
-        for id in config.tg_bot.admin_ids:
-            await bot.send_message(id, f"Пользователь {user.name} хочет получить доступ к боту. ID={user.id}", 
+        for admin in admins:
+            await bot.send_message(admin.id, f"Пользователь {user.name} хочет получить доступ к боту. ID={user.id}", 
                                 reply_markup=keyboard_constructor(btn.accept, btn.make_admin, btn.refuse))
-            await cq.answer(text="Запрос отправлен администратору")
+            await cq.answer(text="Запрос отправлен администратору", show_alert=True)
             await NewUser.request.set()
 
 async def request_sent(message: types.Message):

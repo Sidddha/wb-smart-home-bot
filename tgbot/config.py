@@ -51,7 +51,7 @@ def load_config(path: str = None):
             password=env.str('DB_PASSWORD'),
             user=env.str('DB_USER'),
             database=env.str('DB_NAME'),
-            url=env.str('POSTGRES_URL')
+            url=env.str('POSTGRES_URI')
         ),
         misc=Miscellaneous()
     )

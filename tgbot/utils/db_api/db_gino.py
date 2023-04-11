@@ -32,7 +32,7 @@ class TimedBaseModel(BaseModel):
         sa.DateTime(True),
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
-        server_default=sa.func.now(),
+        server_default=db.func.now(),
     )
 
 async def on_startup(dispatcher: Dispatcher):

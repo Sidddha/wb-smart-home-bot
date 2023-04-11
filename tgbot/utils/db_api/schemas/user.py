@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, BigInteger, String, sql
+from sqlalchemy import Column, BigInteger, String, sql
 
 from tgbot.utils.db_api.db_gino import TimedBaseModel
 
