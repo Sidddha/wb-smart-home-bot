@@ -3,7 +3,9 @@
 
 ```
 # cd /opt
-# wget https://github.com/Sidddha/wb-smart-home-bot.git
+```
+```
+# git clone https://github.com/Sidddha/wb-smart-home-bot.git
 ```
 
 В файле `.env.template` насторйте параметры бота (имя, токен и тд) и базы данных. 
