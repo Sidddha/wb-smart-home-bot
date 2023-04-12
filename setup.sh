@@ -3,7 +3,7 @@
 # Define variables for the script
 SERVICE_NAME="wb-bot"
 USER_NAME="root"
-WORKING_DIR="/opt/tgbot"
+WORKING_DIR="/opt/wb-smart-home-bot"
 APP_DIR="$WORKING_DIR"
 VENV_NAME="venv"
 VENV_DIR="$WORKING_DIR/$VENV_NAME"
