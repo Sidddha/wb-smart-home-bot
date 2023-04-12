@@ -16,8 +16,8 @@ mv $WORKING_DIR/.env.template $WORKING_DIR/.env
 if ! command -v docker &> /dev/null
 then
     curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
+    sh get-docker.sh
+    usermod -aG docker $USER
     rm get-docker.sh
 fi
 
