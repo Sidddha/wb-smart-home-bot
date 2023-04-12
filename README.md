@@ -6,7 +6,11 @@
 # git clone https://github.com/Sidddha/wb-smart-home-bot.git
 ```
 
-В файле `.env.template` насторйте параметры бота (имя, токен и тд) и базы данных. 
+В файле `dotenv_template` насторйте параметры бота (имя, токен и тд) и базы данных. 
+```
+# cd wb-smart-home-bot
+# nano dotenv_template
+```
 
 Затем запустите скрипт, который настроит systemd сервис бота и контейнер с базой данных:
 ```
@@ -15,8 +19,8 @@
 **Structure:**
 
 ```
-tgbot_template/
-├── bot.py
+wb-smart-home-bot/
+├── app.py
 ├── tgbot/
 │   ├── __init__.py
 │   ├── config.py
@@ -38,9 +42,9 @@ tgbot_template/
 
 ## Detailed description
 
-### `bot.py`
+### `app.py`
 
-The bot.py script is the entry point for the template Telegram bot. It performs the following steps to start and run the
+The app.py script is the entry point for the template Telegram bot. It performs the following steps to start and run the
 bot:
 
 1. Set up logging: The `logging` module is imported and configured to log messages to the console.

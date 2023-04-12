@@ -9,7 +9,7 @@ VENV_NAME="venv"
 VENV_DIR="$WORKING_DIR/$VENV_NAME"
 COMPOSE_FILE="$WORKING_DIR/docker-compose.yml"
 
-mv $WORKING_DIR/.env.template $WORKING_DIR/.env
+mv $WORKING_DIR/dotenv_template $WORKING_DIR/.env
 
 
 # Install Docker (if not already installed)
