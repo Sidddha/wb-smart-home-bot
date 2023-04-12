@@ -11,16 +11,44 @@ COMPOSE_FILE="$WORKING_DIR/docker-compose.yml"
 
 mv $WORKING_DIR/dotenv_template $WORKING_DIR/.env
 
+# Check if $USER is empty
+if [ -z "$USER" ]; then
+  # If $USER is empty, use whoami to get the actual user
+  CURRENT_USER=$(whoami)
+else
+  # If $USER is not empty, use it as the user
+  CURRENT_USER=$USER
+fi
+
+
+# Check if the current user is root
+if [[ "$CURRENT_USER" == "root" ]]; then
+  # Output a warning message
+  echo "WARNING: Installing this application as root can be a security vulnerability. Do you want to continue? (yes/no)"
+
+  # Read user input
+  read CONTINUE
+
+  # Check if user input is "yes"
+  if [[ "$CONTINUE" == "yes" | "y"]]; then
+    echo "Continuing the script..."
+  else
+    echo "Aborting the script."
+    exit 1
+  fi
+fi
 
 # Install Docker (if not already installed)
 if ! command -v docker &> /dev/null
 then
     curl -fsSL https://get.docker.com -o get-docker.sh
-    sh get-docker.sh
-    usermod -aG docker $USER
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $CURRENT_USER
     rm get-docker.sh
 fi
 
+
+apt-get install python3-venv
 # Install dependencies in a virtual environment
 python3 -m venv $VENV_DIR
 source $VENV_DIR/bin/activate
