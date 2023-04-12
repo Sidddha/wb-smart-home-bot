@@ -3,8 +3,6 @@
 
 ```
 # cd /opt
-```
-```
 # git clone https://github.com/Sidddha/wb-smart-home-bot.git
 ```
 

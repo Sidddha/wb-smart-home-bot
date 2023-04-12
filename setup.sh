@@ -11,6 +11,16 @@ COMPOSE_FILE="$WORKING_DIR/docker-compose.yml"
 
 mv $WORKING_DIR/.env.template $WORKING_DIR/.env
 
+
+# Install Docker (if not already installed)
+if ! command -v docker &> /dev/null
+then
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $USER
+    rm get-docker.sh
+fi
+
 # Install dependencies in a virtual environment
 python3 -m venv $VENV_DIR
 source $VENV_DIR/bin/activate
