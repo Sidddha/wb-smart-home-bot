@@ -30,7 +30,7 @@ if [[ "$CURRENT_USER" == "root" ]]; then
   read CONTINUE
 
   # Check if user input is "yes"
-  if [[ "$CONTINUE" == "yes" | "y"]]; then
+  if [[ "$CONTINUE" == "yes" ]]; then
     echo "Continuing the script..."
   else
     echo "Aborting the script."
@@ -48,7 +48,7 @@ then
 fi
 
 
-apt-get install python3-venv
+sudo apt-get -y install python3-venv
 # Install dependencies in a virtual environment
 python3 -m venv $VENV_DIR
 source $VENV_DIR/bin/activate
