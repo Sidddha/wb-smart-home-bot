@@ -46,6 +46,18 @@ then
     rm get-docker.sh
 fi
 
+# Install Docker Compose (if not already installed)
+if ! command -v docker-compose &> /dev/null
+then
+    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+fi
+
+# Install pip (if not already installed)
+if ! command -v pip &> /dev/null
+then
+    sudo apt-get -y install python3-pip
+fi
 
 sudo apt-get -y install python3-venv
 # Install dependencies in a virtual environment
@@ -54,7 +66,7 @@ source $VENV_DIR/bin/activate
 pip install -r $APP_DIR/requirements.txt
 
 # Create a systemd service file
-cat <<EOF > /etc/systemd/system/$SERVICE_NAME.service
+sudo cat <<EOF > /etc/systemd/system/$SERVICE_NAME.service
 [Unit]
 Description=WB Bot
 After=network.target
