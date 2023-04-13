@@ -37,7 +37,7 @@ async def get_password(message: types.Message, state: FSMContext):
     if password == config.tg_bot.admin_password:
         await db_commands.update_status(message.from_user.id, "ADMIN")
         await state.finish()
-        await message.edit_text("Пароль принят! Вы зарегистрированы как администратор.\n"
+        await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
                              "Для начала работы отправьте /start")
     else:
         data = await state.get_data()

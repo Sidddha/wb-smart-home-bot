@@ -2,8 +2,7 @@
 
 # Define variables for the script
 SERVICE_NAME="wb-bot"
-USER_NAME="root"
-WORKING_DIR="/opt/wb-smart-home-bot"
+WORKING_DIR="/mnt/data/wb-smart-home-bot"
 APP_DIR="$WORKING_DIR"
 VENV_NAME="venv"
 VENV_DIR="$WORKING_DIR/$VENV_NAME"
@@ -61,8 +60,8 @@ Description=WB Bot
 After=network.target
 
 [Service]
-User=$USER_NAME
-Group=$USER_NAME
+User=$CURRENT_USER
+Group=$CURRENT_USER
 Type=simple
 WorkingDirectory=$WORKING_DIR
 Environment="PATH=$VENV_DIR/bin"

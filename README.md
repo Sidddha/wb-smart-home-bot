@@ -1,8 +1,8 @@
 ## Установка:
-Перейдите в `/opt` и скачайте репозиторий:
+Перейдите в `/mnt/data` и скачайте репозиторий:
 
 ```
-# cd /opt
+# cd /mnt/data
 # git clone https://github.com/Sidddha/wb-smart-home-bot.git
 ```
 
