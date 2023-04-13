@@ -19,38 +19,27 @@ else
   CURRENT_USER=$USER
 fi
 
-
-# Check if the current user is root
-if [[ "$CURRENT_USER" == "root" ]]; then
-  # Output a warning message
-  echo "WARNING: Installing this application as root can be a security vulnerability. Do you want to continue? (yes/no)"
-
-  # Read user input
-  read CONTINUE
-
-  # Check if user input is "yes"
-  if [[ "$CONTINUE" == "yes" ]]; then
-    echo "Continuing the script..."
-  else
-    echo "Aborting the script."
-    exit 1
-  fi
-fi
-
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg
+    
 # Install Docker (if not already installed)
+
+
 if ! command -v docker &> /dev/null
 then
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     sudo usermod -aG docker $CURRENT_USER
-    rm get-docker.sh
-fi
-
-# Install Docker Compose (if not already installed)
-if ! command -v docker-compose &> /dev/null
-then
-    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
 fi
 
 # Install pip (if not already installed)
