@@ -1,0 +1,15 @@
+
+[Unit]
+Description=Telegram bot for remote access to wb server
+After=network.target
+
+[Service]
+User=tgbot
+Group=tgbot
+Type=simple
+WorkingDirectory=/opt/tgbot
+ExecStart=/opt/tgbot/venv/bin/python app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

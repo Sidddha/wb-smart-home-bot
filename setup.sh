@@ -23,23 +23,41 @@ sudo apt-get update
 sudo apt-get install \
     ca-certificates \
     curl \
-    gnupg
+    gnupg \
+    lsb-release
+    
     
 # Install Docker (if not already installed)
 
 
 if ! command -v docker &> /dev/null
 then
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
-    echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    sudo usermod -aG docker $CURRENT_USER
+    # Run wb-release command and capture output
+    output=$(wb-release)
+
+    # Extract the version number from the output
+    version=$(echo "$output" | cut -d ' ' -f 2)
+
+    # Compare the version number to the minimum required version
+    if [[ $version == "wb-2304" || $version > "wb-2304" ]]; then
+      echo "wb release is newer then wb-2304. Performing additional actions..."
+      apt install -y iptables
+      update-alternatives --set iptables /usr/sbin/iptables-legacy
+      update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+    fi
+
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    mkdir /mnt/data/etc/docker && ln -s /mnt/data/etc/docker /etc/docker
+    mkdir /mnt/data/.docker
+    sudo cat << EOF > /etc/docker/daemon.json
+{
+  "data-root": "/mnt/data/.docker"
+}
+EOF
+
+    apt update && apt install docker-ce docker-ce-cli containerd.io docker-compose
+
 fi
 
 # Install Docker Compose (if not already installed)
@@ -48,44 +66,6 @@ then
     sudo curl -L "https://github.com/docker/compose/releases/v2.17.2/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 fi
-
-# Install pip (if not already installed)
-if ! command -v pip &> /dev/null
-then
-    sudo apt-get -y install python3-pip
-fi
-
-sudo apt-get -y install python3-venv
-# Install dependencies in a virtual environment
-python3 -m venv $VENV_DIR
-source $VENV_DIR/bin/activate
-pip install -r $APP_DIR/requirements.txt
-
-# Create a systemd service file
-sudo cat <<EOF > /etc/systemd/system/$SERVICE_NAME.service
-[Unit]
-Description=WB Bot
-After=network.target
-
-[Service]
-User=$CURRENT_USER
-Group=$CURRENT_USER
-Type=simple
-WorkingDirectory=$WORKING_DIR
-Environment="PATH=$VENV_DIR/bin"
-ExecStart=$VENV_DIR/bin/python $APP_DIR/app.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Reload systemd daemon to pick up new service file
-systemctl daemon-reload
-
-# Enable and start the service
-systemctl enable $SERVICE_NAME.service
-systemctl start $SERVICE_NAME.service
 
 # Run docker-compose
 cd $WORKING_DIR
