@@ -18,3 +18,6 @@ POSTGRES_URI=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAM
 
 PGADMIN_EMAIL=admin@admin.com
 PGADMIN_PASSWORD=admin
+
+MQTT_HOST=mqtt_brocker_ip
+MQTT_PORT=1880
