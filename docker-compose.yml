@@ -62,7 +62,9 @@ services:
         DB_PORT: ${DB_PORT}
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
-        DB_PASSWORD: ${DB_PASSWORD}      
+        DB_PASSWORD: ${DB_PASSWORD}    
+        MQTT_HOST: ${MQTT_HOST}
+        MQTT_PORT: ${MQTT_PORT}
       networks:
       - tg_bot
       ports:
