@@ -26,3 +26,4 @@ async def update_status(id: int, status: str = "USER"):
 async def get_admins():
     admins = await User.query.where(User.status == "ADMIN").gino.all()
     return admins
+
