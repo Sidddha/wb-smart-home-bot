@@ -22,23 +22,6 @@ else
   CURRENT_USER=$USER
 fi
 
-sudo apt-get update
-sudo apt-get install \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-    
-    
-# Install Docker (if not already installed)
-
-
-if ! command -v docker &> /dev/null
-then
-  echo "Running installation script..."
-  bash ./install_docker.sh
-fi
-
 # Run docker-compose
 cd $WORKING_DIR
 docker-compose -f $COMPOSE_FILE up -d
