@@ -11,7 +11,7 @@ VENV_NAME="venv"
 VENV_DIR="$WORKING_DIR/$VENV_NAME"
 COMPOSE_FILE="$WORKING_DIR/docker-compose.yml"
 
-mv $WORKING_DIR/dotenv_template $WORKING_DIR/.env
+#mv $WORKING_DIR/dotenv_template $WORKING_DIR/.env
 
 # Check if $USER is empty
 if [ -z "$USER" ]; then
@@ -24,7 +24,7 @@ fi
 
 # Run docker-compose
 cd $WORKING_DIR
-docker-compose -f $COMPOSE_FILE up -d
+docker compose -f $COMPOSE_FILE up -d
 
 # Exit with success status code
 exit 0

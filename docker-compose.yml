@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   db:
-    image: postgres:bullseye
+    image: postgres:latest
     restart: always
     env_file:
       - ".env"    
@@ -17,29 +17,29 @@ services:
     networks:
       - tg_bot
 
-  pgadmin:
-    image: dpage/pgadmin4
-    ports:
-      - "8080:80"
-    env_file:
-      - ".env"       
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: 'True'
-      PGADMIN_ENABLE_CSRF_PROTECTION: 'True'
-      PGADMIN_SERVER_JSON_DATA: 
-        '[{"Name": "pg", 
-        "Group": "Servers", 
-        "Port": ${DB_PORT}, 
-        "Username": "postgres", 
-        "Password": "${DB_PASSWORD}", 
-        "Host": "db", 
-        "SSLMode": "prefer", 
-        "MaintenanceDB": "${DB_NAME}", 
-        "DBRestriction": "${DB_NAME}"
-        }]'
-    restart: always
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - "8080:80"
+  #   env_file:
+  #     - ".env"       
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+  #     PGADMIN_CONFIG_SERVER_MODE: 'True'
+  #     PGADMIN_ENABLE_CSRF_PROTECTION: 'True'
+  #     PGADMIN_SERVER_JSON_DATA: 
+  #       '[{"Name": "pg", 
+  #       "Group": "Servers", 
+  #       "Port": ${DB_PORT}, 
+  #       "Username": "postgres", 
+  #       "Password": "${DB_PASSWORD}", 
+  #       "Host": "db", 
+  #       "SSLMode": "prefer", 
+  #       "MaintenanceDB": "${DB_NAME}", 
+  #       "DBRestriction": "${DB_NAME}"
+  #       }]'
+  #   restart: always
 
   bot:
     image: "${BOT_IMAGE_NAME:-image}"
