@@ -57,45 +57,6 @@ def load_config(path: str = None):
     )
 
 
-# def add_admin(id: str):
-#     env = Env()
-#     env.read_env()
-
-#     # Get a list of admin IDs from the ADMINS variable in the environment
-#     admin_ids_string = env.str("ADMINS", default="")
-#     admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
-
-#     # Add the new admin ID to the list
-#     admin_ids.append(id)
-
-#     # Set the ADMINS variable to the updated list of admin IDs
-#     admin_ids_string = ",".join(str(i) for i in admin_ids)
-#     environ["ADMINS"] = admin_ids_string
-#     env("ADMINS", admin_ids_string)
-#     # Write the changes back to the .env file
-#     dotenv_file = dotenv.find_dotenv()
-#     dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
-#     db.update_status(status="ADMIN", id=id)
-
-# def remove_admin(id):
-#     env = Env()
-#     env.read_env()
-
-#     # Get a list of admin IDs from the ADMINS variable in the environment
-#     admin_ids_string = env.str("ADMINS", default="")
-#     admin_ids = [] if admin_ids_string == "" else list(map(int, admin_ids_string.split(',')))
-
-#     # Add the new admin ID to the list
-#     admin_ids.remove(id)
-
-#     # Set the ADMINS variable to the updated list of admin IDs
-#     admin_ids_string = ",".join(str(i) for i in admin_ids)
-#     environ["ADMINS"] = admin_ids_string
-#     env("ADMINS", admin_ids_string)
-#     # Write the changes back to the .env file
-#     dotenv_file = dotenv.find_dotenv()
-#     dotenv.set_key(dotenv_file, "ADMINS", admin_ids_string)
-#     db.update_status(status="ADMIN", id=id)
 
 
 

@@ -68,7 +68,7 @@ services:
     networks:
     - tg_bot
     ports:
-      - "80:80"   
+      - "8080:80"   
 
 volumes:
   db-data:
