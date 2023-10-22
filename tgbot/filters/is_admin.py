@@ -1,8 +1,9 @@
 import typing
 
 from aiogram.dispatcher.filters import BoundFilter
-from tgbot.utils.db_api import db_commands as db
+from tgbot.utils.db_api.db_commands import Database
 
+db = Database()
 
 class AdminFilter(BoundFilter):
     key = 'is_admin'
@@ -12,7 +13,7 @@ class AdminFilter(BoundFilter):
 
     async def check(self, obj):
         try:
-            user = await db.select_user(id=obj.from_user.id)
+            user = db.get_user(id=obj.from_user.id)
             if user.status is None:
                 return False
             else:

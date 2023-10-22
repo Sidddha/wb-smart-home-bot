@@ -5,17 +5,25 @@ from tgbot.keyboards.registration_keyboard import registration_callback, Button
 from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import NewUser
-from loader import bot, config
-from tgbot.utils.db_api import db_commands 
+from loader import config, bot
+from tgbot.utils.db_api.db_commands import Database 
 import datetime
 
-
+db = Database()
 btn = Button()
 ATTEMPTS = 3 # Количество попыток ввода пароля
 TIMEOUT = 30 # Таймаут после израсходования попыток
 
 async def start_unknown(message: types.Message, user: User, state: FSMContext):
-    """ Вызывается если пользователь неизвестен. """
+    """
+    Handler for the start command when the user is unknown.
+
+    Arguments:
+    - message (types.Message): The message object.
+    - user (User): The user object.
+    - state (FSMContext): The FSM context.
+    """
+
     await message.answer(f"Здравствуй, {user.name}. Я тебя не знаю. Введи пароль доступа или отправь запрос администратору",
                          reply_markup=keyboard_constructor(btn.enter_password, btn.send_request, btn.cancel))
     await state.reset_state(with_data=False)
@@ -25,17 +33,32 @@ async def start_unknown(message: types.Message, user: User, state: FSMContext):
 
 
 async def enter_password(cq: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    """ Предлагает ввести пароль администратора. Пароль задается в .env """
+    """
+    Handler for entering the admin password.
+
+    Arguments:
+    - cq (types.CallbackQuery): The callback query object.
+    - callback_data (dict): The callback data.
+    - state (FSMContext): The FSM context.
+    """
+
     await cq.answer()
     await cq.message.edit_text("Введите пароль", reply_markup=keyboard_constructor(btn.cancel))
     await NewUser.password.set()
 
 
 async def get_password(message: types.Message, state: FSMContext):
-    """ Проверка пароля и назначение пользователя админом если пароль верный."""
+    """
+    Handler for getting the admin password and checking its validity.
+
+    Arguments:
+    - message (types.Message): The message object.
+    - state (FSMContext): The FSM context.
+    """
+
     password = int(message.text)
     if password == config.tg_bot.admin_password:
-        await db_commands.update_status(message.from_user.id, "ADMIN")
+        db.update_status(message.from_user.id, "ADMIN")
         await state.finish()
         await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
                              "Для начала работы отправьте /start")
@@ -64,11 +87,15 @@ async def get_password(message: types.Message, state: FSMContext):
 
 
 async def send_request(cq: types.CallbackQuery, user: User):
-    """ 
-    Пользователь может отпраить запрос на использование бота администратору.
-    Запрос будет отправлен всем администраторам.
     """
-    admins = await db_commands.get_admins()
+    Handler for sending a request to the administrators for access.
+
+    Arguments:
+    - cq (types.CallbackQuery): The callback query object.
+    - user (User): The user object.
+    """
+
+    admins = db.get_admins()
     if not admins:        
         await cq.answer()
         await cq.message.edit_text("Упс, похоже здесь еще нет ни одного администратора... Попробуйте ввести пароль.", 
@@ -80,10 +107,27 @@ async def send_request(cq: types.CallbackQuery, user: User):
             await cq.answer(text="Запрос отправлен администратору", show_alert=True)
             await NewUser.request.set()
 
+
 async def request_sent(message: types.Message):
+    """
+    Handler for informing the user that their request has been sent.
+
+    Arguments:
+    - message (types.Message): The message object.
+    """
+
     await message.answer("Вы уже отправили запрос. Имейте терпение, скоро администратор рассмотрит его")
 
+
 async def attempts_limit(message: types.Message, state: FSMContext):
+    """
+    Handler for informing the user about the attempts limit.
+
+    Arguments:
+    - message (types.Message): The message object.
+    - state (FSMContext): The FSM context.
+    """
+
     try:
         data = await state.get_data()
         print(data)
@@ -104,11 +148,29 @@ async def attempts_limit(message: types.Message, state: FSMContext):
     except:
         pass
 
+
 async def debug(cq: types.CallbackQuery, state:FSMContext):
+    """
+    Handler for debugging purposes.
+
+    Arguments:
+    - cq (types.CallbackQuery): The callback query object.
+    - state (FSMContext): The FSM context.
+    """
+
     await state.reset_state(with_data=True)
     await cq.answer("Data reset")
 
+
 async def cancel(cq: types.CallbackQuery, state: FSMContext):
+    """
+    Handler for canceling the current operation.
+
+    Arguments:
+    - cq (types.CallbackQuery): The callback query object.
+    - state (FSMContext): The FSM context.
+    """
+
     await cq.message.edit_text(f"Введи пароль доступа или отправь запрос администратору")
     await cq.message.edit_reply_markup(keyboard_constructor(btn.enter_password, btn.send_request, btn.cancel))
     await cq.answer(text="Всего хорошего!", show_alert=True)
@@ -116,6 +178,13 @@ async def cancel(cq: types.CallbackQuery, state: FSMContext):
 
 
 def register_unknown(dp: Dispatcher):
+    """
+    Register handlers for the unknown user state.
+
+    Arguments:
+    - dp (Dispatcher): The dispatcher object.
+    """
+
     dp.register_message_handler(start_unknown, commands=["start"], state="*")
     dp.register_callback_query_handler(debug, registration_callback.filter(reg="debug"), state="*")
     dp.register_message_handler(attempts_limit, state=NewUser.attempts_limit)
