@@ -1,7 +1,7 @@
-environs
 aiohttp
 asyncpg
 python-dotenv
-
-aiogram<3.0.0
-aioredis
+aiohttp==3.6.2
+aioredis<2.0
+environs~=9.0
+aiogram==2.7
