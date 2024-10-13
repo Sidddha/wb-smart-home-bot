@@ -6,7 +6,7 @@ services:
     stop_signal: SIGINT
     build:
       context: .  
-    working_dir: "/mnt/data/${BOT_NAME}"
+    working_dir: "/mnt/data/${BOT_NAME:-app}"
     volumes:
     - .:/mnt/data/${BOT_NAME}
     command: python3 -m app
@@ -18,7 +18,7 @@ services:
       MQTT_HOST: ${MQTT_HOST}
       MQTT_PORT: ${MQTT_PORT}
     networks:
-    - tg_bot
+    - wb-bot
     ports:
       - "8080:80"   
 
@@ -26,7 +26,7 @@ volumes:
   db-data:
   
 networks:
-  tg_bot:
+  wb-bot:
     driver: bridge
 
 
