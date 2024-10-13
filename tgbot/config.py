@@ -38,7 +38,8 @@ def load_config(path: str = None):
             use_redis=env.bool("USE_REDIS"),
             default_password=env.str("DEFAULT_PASSWORD"),
             admin_password_hash=env.str("ADMIN_PASSWORD_HASH"),
-            dashboards='/home/siddha/wb-smart-home-bot/wb-webui.conf'
+            dashboards='wb-webui.conf'
+            # dashboards='/home/siddha/wb-smart-home-bot/wb-webui.conf'
         ),
         misc=Miscellaneous()
     )

@@ -20,7 +20,7 @@ class Button():
             "callback_data": main_callback.new(command="devices")           
         }
         self.settings= {
-            "text": "Настройки (not implemented)", 
+            "text": "Настройки ⚙️(not implemented)", 
             "callback_data": main_callback.new(command="settings")           
         }   
  

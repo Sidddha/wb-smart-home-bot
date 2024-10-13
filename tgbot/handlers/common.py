@@ -12,10 +12,9 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from tgbot.keyboards.callback_datas import widgets_callback, cells_callback
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import MainMenu
-from emoji import emojize
 
 # dashboard = require("/mnt/data/SmartHome/wb-rules-modules/")
-cell = require("/home/siddha/SmartHome/wb-rules-modules/cell.js")
+# cell = require("/home/siddha/SmartHome/wb-rules-modules/cell.js")
 
 db = Database()
 btn = Button()
@@ -50,27 +49,42 @@ async def back_to_main(cq: CallbackQuery, state:FSMContext):
 async def get_cell(cq: CallbackQuery, state: FSMContext):
     with open(config.tg_bot.dashboards) as f:
         dashboard = json.load(f)
-    keyboard = InlineKeyboardMarkup(2)
+    keyboard = InlineKeyboardMarkup()
     for widget in dashboard['widgets']:
         if widget['id'] == cq.data.split(':')[1]:
             name = widget['name']
             await cq.message.edit_text(name)
+            value = True #cell.getValue()
             for cell in widget['cells']:
                 try:
                     text = cell['name']
-                    cell(cell['id'])
-                    value = cell.getValue()
-                    if cell['type'] == 'switch' or 'alarm':# or 'pushbutton' or 'range':
+                    if text == "":
+                        continue
+                    if text == "working on battery":
                         if value:
-                            emoji = emojize()
-                        
+                            text += ' 🔋'
+                        else:
+                            text += ' 🪫'
+                    else:
+                        if cell['type'] == 'switch' or 'alarm':# or 'pushbutton' or 'range':
+                            if value:
+                                text += ' ✅'
+                            else:
+                                text += ' ⭕️'
+                        elif cell['type'] == 'pushbutton':
+                            text += ' 🖲'
+                        else:
+                            text += ' ✈️'
                     callback_data = cells_callback.new(command=cell['id'])
                     keyboard.add(InlineKeyboardButton(text, callback_data=callback_data))  
+                    value = not value
                 except Exception:
-                    cq.answer("Ошибка параметр 'name' не найден", show_alert=True)
+                    continue
+                #    await cq.answer("Ошибка параметр 'name' не найден", show_alert=True)
     keyboard.add(InlineKeyboardButton('Назад', callback_data=cells_callback.new(command='return')))
     await cq.message.edit_reply_markup(keyboard)
     await state.finish()
+
     
 def register_common(dp: Dispatcher):
     """
