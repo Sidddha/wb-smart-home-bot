@@ -24,7 +24,7 @@ async def retranslate(message: types.Message, user: User):
         message.forward(admin.id)
 
 def register_user(dp: Dispatcher):
-    dp.register_message_handler(start, commands=["start"], state="*")#, is_user=True)
+    dp.register_message_handler(start, commands=["start"], state="*", is_user=True)
     # dp.register_message_handler(callback=retranslate)
 
 
