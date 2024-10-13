@@ -13,6 +13,7 @@ class TgBot:
     # admin_ids: list[int]
     use_redis: bool
     admin_password: int
+    dashboards: str
 
 
 @dataclass
@@ -34,7 +35,8 @@ def load_config(path: str = None):
         tg_bot=TgBot(
             token=env.str("BOT_TOKEN"),
             use_redis=env.bool("USE_REDIS"),
-            admin_password=env.int("ADMIN_PASSWORD")
+            admin_password=env.int("ADMIN_PASSWORD"),
+            dashboards='/etc/wb-webui.conf'
         ),
         misc=Miscellaneous()
     )

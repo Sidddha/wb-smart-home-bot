@@ -1,10 +1,11 @@
-from .calback_datas import registration_callback
+from .callback_datas import registration_callback
 
 
 class Button():
     def __init__(self):
         self.text = ""
         self.callback_data = ""
+        
         self.enter_password = {
             "text": "Ввести пароль",
             "callback_data": registration_callback.new(reg="enter_password")
