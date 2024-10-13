@@ -6,9 +6,9 @@ services:
     stop_signal: SIGINT
     build:
       context: .  
-    working_dir: "/usr/src/app/${BOT_NAME}"
+    working_dir: "/mnt/data/${BOT_NAME}"
     volumes:
-    - .:/usr/src/app/${BOT_NAME}
+    - .:/mnt/data/${BOT_NAME}
     command: python3 -m app
     restart: always
     env_file:

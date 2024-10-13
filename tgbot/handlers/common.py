@@ -74,7 +74,7 @@ async def get_cell(cq: CallbackQuery, state: FSMContext):
                         elif cell['type'] == 'pushbutton':
                             text += ' 🖲'
                         else:
-                            text += f' {value}'
+                            text += f" {value} {cell['type']}"
                     callback_data = cells_callback.new(command=cell['id'])
                     keyboard.add(InlineKeyboardButton(text, callback_data=callback_data))  
                 except Exception:
