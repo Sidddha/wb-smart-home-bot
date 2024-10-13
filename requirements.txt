@@ -6,3 +6,4 @@ aioredis<2.0
 environs~=9.0
 aiogram==2.7
 javascript
+passlib

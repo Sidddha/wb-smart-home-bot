@@ -6,7 +6,7 @@ BOT_NAME=bot_name
 BOT_TOKEN=<replace.with.your.bot.token>
 ADMIN_PASSWORD=1234
 
-USE_REDIS=False # Измените значение на True если хотите использовать redis в качестве временного хранилища.
+USE_REDIS=True # Измените значение на True если хотите использовать redis в качестве временного хранилища.
                 # В противном случае будет исползованно стандартное хранилище
 
 DB_PORT=5432

@@ -12,16 +12,15 @@ class Button():
             "callback_data": main_callback.new(command="get_widgets")
         }
         self.system= {
-            "text": "Сведения о системе", 
+            "text": "Сведения о системе (not implemented)", 
             "callback_data": main_callback.new(command="system")
         }
         self.devices= {
-            "text": "Устройства", 
+            "text": "Устройства (not implemented)", 
             "callback_data": main_callback.new(command="devices")           
         }
         self.settings= {
-            "text": "Настройки", 
+            "text": "Настройки (not implemented)", 
             "callback_data": main_callback.new(command="settings")           
         }   
-# mainKeyboard = keyboard_constructor()
  

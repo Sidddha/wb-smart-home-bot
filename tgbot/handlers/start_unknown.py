@@ -8,6 +8,7 @@ from tgbot.misc.states import NewUser
 from loader import config, bot
 from tgbot.utils.db_api.db_commands import Database 
 import datetime
+from passlib.hash import bcrypt
 
 db = Database()
 btn = Button()
@@ -56,35 +57,56 @@ async def get_password(message: types.Message, state: FSMContext):
     - state (FSMContext): The FSM context.
     """
 
-    password = int(message.text)
-    if password == config.tg_bot.admin_password:
-        db.update_status(message.from_user.id, "ADMIN")
-        await state.finish()
-        await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
-                             "Для начала работы отправьте /start")
-    else:
-        data = await state.get_data()
-        attempt = data.get("attempts")
-        attempt = attempt + 1
-        data["attempts"] = attempt
-        await state.update_data(data=data, kwargs="attempts")
-        if attempt > ATTEMPTS - 1:
-            now = datetime.datetime.now()
-            delta = now + datetime.timedelta(minutes=TIMEOUT)
-            data["time"] = delta
-            await state.update_data(data=data, kwargs=("time"))
-            await message.answer("Все, хватит. Думаю ты не знаешь пароль",
-                                 reply_markup=keyboard_constructor(btn.send_request, btn.cancel))
-            await NewUser.attempts_limit.set()
-            print(await state.get_state())
-            print(data)
-        elif attempt == ATTEMPTS - 1:
-            await message.answer("Осталась последняя попытка", reply_markup=keyboard_constructor(btn.cancel))
-            await NewUser.password.set()
+    password = str(message.text)
+    try:
+        with open("tgbot/data/passwd", "r") as f:
+            admin_password_hash = f.read()
+            if bcrypt.verify(password, admin_password_hash):
+                db.update_status(message.from_user.id, "ADMIN")
+                await state.finish()
+                await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
+                                    "Для начада работы отправьте /start")    
+    except:
+        if password == config.tg_bot.default_password:
+            db.update_status(message.from_user.id, "ADMIN")
+            await state.finish()
+            await message.answer("Пароль принят! Вы зарегистрированы как администратор.\n"
+                                "Для начала работы измените дефолтный пароль...")
+            await NewUser.set_password.set()
         else:
-            await message.answer(f"Неверный пароль. Осталось попыток: {ATTEMPTS-attempt}", reply_markup=keyboard_constructor(btn.cancel))
-            await NewUser.password.set()
-
+            data = await state.get_data()
+            attempt = data.get("attempts")
+            attempt = attempt + 1
+            data["attempts"] = attempt
+            await state.update_data(data=data, kwargs="attempts")
+            if attempt > ATTEMPTS - 1:
+                now = datetime.datetime.now()
+                delta = now + datetime.timedelta(minutes=TIMEOUT)
+                data["time"] = delta
+                await state.update_data(data=data, kwargs=("time"))
+                await message.answer("Все, хватит. Думаю ты не знаешь пароль",
+                                     reply_markup=keyboard_constructor(btn.send_request, btn.cancel))
+                await NewUser.attempts_limit.set()
+                print(await state.get_state())
+                print(data)
+            elif attempt == ATTEMPTS - 1:
+                await message.answer("Осталась последняя попытка")
+                await NewUser.password.set()
+            else:
+                await message.answer(f"Неверный пароль. Осталось попыток: {ATTEMPTS-attempt}")
+                await NewUser.password.set()
+    await message.delete()
+        
+async def set_password(message: types.Message, state: FSMContext):
+    password = str(message.text)
+    hashed_password = bcrypt.hash(password)
+    # config.tg_bot.admin_password_hash = hashed_password
+    with open("tgbot/data/passwd", "x") as f:
+        f.write(hashed_password) 
+        f.close()
+    await message.delete()
+    await message.answer("Пароль сохранен!")
+    await state.finish()
 
 async def send_request(cq: types.CallbackQuery, user: User):
     """
@@ -193,3 +215,4 @@ def register_unknown(dp: Dispatcher):
     dp.register_message_handler(get_password, state=NewUser.password)
     dp.register_callback_query_handler(send_request, registration_callback.filter(reg="send_request"))
     dp.register_message_handler(request_sent, state=NewUser.request)
+    dp.register_message_handler(set_password, state=NewUser.set_password)
