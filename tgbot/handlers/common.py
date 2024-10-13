@@ -13,8 +13,8 @@ from tgbot.keyboards.callback_datas import widgets_callback, cells_callback
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import MainMenu
 
-# dashboard = require("/mnt/data/SmartHome/wb-rules-modules/")
-# cell = require("/home/siddha/SmartHome/wb-rules-modules/cell.js")
+device = require("/mnt/data/SmartHome/wb-rules-modules/")
+# device = require("/home/siddha/SmartHome/wb-rules-modules/cell.js")
 
 db = Database()
 btn = Button()
@@ -54,7 +54,7 @@ async def get_cell(cq: CallbackQuery, state: FSMContext):
         if widget['id'] == cq.data.split(':')[1]:
             name = widget['name']
             await cq.message.edit_text(name)
-            value = True #cell.getValue()
+            value = device.getValue()
             for cell in widget['cells']:
                 try:
                     text = cell['name']
@@ -74,10 +74,9 @@ async def get_cell(cq: CallbackQuery, state: FSMContext):
                         elif cell['type'] == 'pushbutton':
                             text += ' 🖲'
                         else:
-                            text += ' ✈️'
+                            text += f' {value}'
                     callback_data = cells_callback.new(command=cell['id'])
                     keyboard.add(InlineKeyboardButton(text, callback_data=callback_data))  
-                    value = not value
                 except Exception:
                     continue
                 #    await cq.answer("Ошибка параметр 'name' не найден", show_alert=True)
