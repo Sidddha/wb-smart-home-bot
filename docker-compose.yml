@@ -6,7 +6,7 @@ services:
     stop_signal: SIGINT
     build:
       context: .  
-    working_dir: "/mnt/data/${BOT_NAME:-app}"
+    working_dir: "/mnt/data/${BOT_IMAGE_NAME:-app}"
     volumes:
     - .:/mnt/data/${BOT_NAME}
     command: python3 -m app
@@ -14,7 +14,7 @@ services:
     env_file:
       - ".env"
     environment:
-      BOT_TOKEN: ${BOT_TOKEN}  
+      BOT_TOKEN: ${BOT_TOKEN}
       MQTT_HOST: ${MQTT_HOST}
       MQTT_PORT: ${MQTT_PORT}
     networks:
