@@ -3,7 +3,7 @@ asyncpg
 python-dotenv
 aiohttp==3.6.2
 aioredis<2.0
-environs~=9.0
+environs>=9.0
 aiogram==2.7
 javascript
 passlib
