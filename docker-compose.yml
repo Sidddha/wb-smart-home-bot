@@ -8,9 +8,9 @@ services:
       context: . 
       args:
         BOT_NAME: ${BOT_NAME}
-    working_dir: "/mnt/sdcard/${BOT_NAME}"
+    working_dir: "/mnt/data/${BOT_NAME}"
     volumes:
-    - .:/mnt/sdcard/${BOT_NAME}
+    - .:/mnt/data/${BOT_NAME:-volume}
     command: python3 -m app
     restart: always
     env_file:
