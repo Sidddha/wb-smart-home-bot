@@ -5,7 +5,7 @@ set -e
 
 # Define variables for the script
 SERVICE_NAME="wb-bot"
-WORKING_DIR="/mnt/data/wb-smart-home-bot"
+WORKING_DIR="/mnt/sdcard/wb-smart-home-bot"
 APP_DIR="$WORKING_DIR"
 VENV_NAME="venv"
 VENV_DIR="$WORKING_DIR/$VENV_NAME"
