@@ -6,9 +6,9 @@ services:
     stop_signal: SIGINT
     build:
       context: .  
-    working_dir: "/mnt/data/${BOT_NAME}"
+    working_dir: "/mnt/sdcard/${BOT_NAME}"
     volumes:
-    - .:/mnt/data/${BOT_NAME}
+    - .:/mnt/sdcard/${BOT_NAME}
     command: python3 -m app
     restart: always
     env_file:
