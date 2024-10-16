@@ -6,7 +6,7 @@ services:
     stop_signal: SIGINT
     build:
       context: .  
-    working_dir: "/mnt/data/${BOT_IMAGE_NAME:-app}"
+    working_dir: "/mnt/data/${BOT_NAME}"
     volumes:
     - .:/mnt/data/${BOT_NAME}
     command: python3 -m app
