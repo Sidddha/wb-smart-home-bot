@@ -1,5 +1,6 @@
 FROM python:3.9-buster
-ENV BOT_NAME=$BOT_NAME
+ARG BOT_NAME
+ENV BOT_NAME=${BOT_NAME}
 
 WORKDIR /mnt/data/${BOT_NAME}
 
