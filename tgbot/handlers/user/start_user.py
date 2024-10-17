@@ -5,7 +5,7 @@ from tgbot.keyboards.main_keyboard import main_callback, Button
 from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from loader import  bot
 from tgbot.utils.db_api.db_commands import Database 
-from javascript import require
+# from javascript import require
 
 # dashboard = require("../../../wb-rules-modules/dashboard.js")
 

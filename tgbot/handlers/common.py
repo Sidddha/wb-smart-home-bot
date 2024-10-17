@@ -6,14 +6,14 @@ from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from loader import  bot, config
 from tgbot.utils.db_api.db_commands import Database 
 import re
-from javascript import require
+# from javascript import require
 import json
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from tgbot.keyboards.callback_datas import widgets_callback, cells_callback
 from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import MainMenu
 
-device = require("/mnt/data/SmartHome/wb-rules-modules/")
+# device = require("/mnt/data/SmartHome/wb-rules-modules/")
 # device = require("/home/siddha/SmartHome/wb-rules-modules/cell.js")
 
 db = Database()
