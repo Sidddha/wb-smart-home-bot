@@ -11,7 +11,7 @@ async def on_startup_notify(dp: Dispatcher):
         if admins:
             for admin in admins:
                 try:
-                    await dp.bot.send_message(admin.chat, "Бот запущен и готов к работе")
+                    await dp.bot.send_message(admin.chat, "Бот запущен и готов к работе /start")
                 except Exception as err:
                     logging.exception(err)
 

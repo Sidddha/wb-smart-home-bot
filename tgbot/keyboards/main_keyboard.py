@@ -1,7 +1,7 @@
 from .callback_datas import main_callback
 
 
-class Button():
+class MainKeyboard():
     def __init__(self):
         self.text = ""
         self.callback_data = ""
@@ -24,3 +24,13 @@ class Button():
             "callback_data": main_callback.new(command="settings")           
         }   
  
+class AdminKeyboard():  
+    def __init__(self):
+        self.text = ""
+        self.callback_data = ""
+       
+ 
+        self.get_users = {
+            "text": "Пользователи",
+            "callback_data": main_callback.new(command="get_users")
+        }

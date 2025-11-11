@@ -2,7 +2,7 @@ from aiogram import Dispatcher, types
 from aiogram.types import Message, CallbackQuery
 from aiogram.utils.callback_data import CallbackData
 from tgbot.misc.throttling import rate_limit
-from tgbot.keyboards.main_keyboard import main_callback, Button
+from tgbot.keyboards.main_keyboard import main_callback, MainKeyboard, AdminKeyboard
 from tgbot.keyboards.keyboard_constructor import keyboard_constructor
 from loader import  bot, config
 from tgbot.utils.db_api.db_commands import Database 
@@ -15,7 +15,8 @@ from aiogram.dispatcher.storage import FSMContext
 from tgbot.misc.states import MainMenu
 
 db = Database()
-btn = Button()
+main_kbd = MainKeyboard()
+admin_kbd = AdminKeyboard()
 
 @rate_limit(limit=1)
 async def admin_start(message: Message):
@@ -27,7 +28,7 @@ async def admin_start(message: Message):
     """
 
     await message.answer(f"Привет, {message.from_user.first_name}\n",
-                        reply_markup=keyboard_constructor(btn.get_widgets, btn.devices, btn.settings, btn.system))
+                        reply_markup=keyboard_constructor(main_kbd.get_widgets, main_kbd.devices, main_kbd.settings, main_kbd.system, admin_kbd.get_users))
  
     
     
